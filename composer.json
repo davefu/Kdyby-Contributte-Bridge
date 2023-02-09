@@ -1,0 +1,33 @@
+{
+	"name": "davefu/kdyby-contributte-bridge",
+	"description": "Nette bridges to combine Kdyby/Events with Contributte/Doctrine",
+	"keywords": ["nette", "doctrine", "orm", "database", "kdyby", "contributte"],
+	"type": "library",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "David Fiedor",
+			"email": "davefu@seznam.cz"
+		}
+	],
+	"require": {
+		"php": ">=7.1",
+		"nette/di": "~2.4@dev",
+		"nettrine/orm": "^0.3"
+	},
+	"require-dev": {
+		"kdyby/console": "^2.7.1",
+		"kdyby/events": "^3.1.1"
+	},
+	"suggest": {
+		"kdyby/console": "Symfony Console integration for Kdyby components",
+		"kdyby/events": "Events for Nette Framework"
+	},
+	"autoload": {
+    "psr-4": {
+      "Davefu\\KdybyContributteBridge\\": "src/"
+    }
+  },
+	"minimum-stability": "dev",
+	"prefer-stable": true
+}
