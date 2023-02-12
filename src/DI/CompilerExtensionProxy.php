@@ -4,9 +4,12 @@ namespace Davefu\KdybyContributteBridge\DI;
 
 use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
+use stdClass;
 
 /**
  * @author David Fiedor <davefu@seznam.cz>
+ *
+ * @property-read stdClass $config
  */
 abstract class CompilerExtensionProxy extends CompilerExtension {
 
@@ -15,19 +18,12 @@ abstract class CompilerExtensionProxy extends CompilerExtension {
 		return parent::setCompiler($compiler, $name);
 	}
 
-	public function setConfig(array $config): self {
-		//$config['configuration'] = $config['configuration'] ?? [];
+	/**
+	 * @param array|object $config
+	 */
+	public function setConfig($config): self {
 		$this->getOriginalExtension()->setConfig($config);
 		return parent::setConfig($config);
-	}
-
-	public function validateConfig(array $expected, array $config = null, $name = null): array {
-		if (func_num_args() === 1) {
-			$this->getOriginalExtension()->validateConfig($expected);
-			return parent::validateConfig($expected);
-		}
-		$this->getOriginalExtension()->validateConfig($expected, $config, $name);
-		return parent::validateConfig($expected, $config, $name);
 	}
 
 	protected function getExtension(string $className): ?CompilerExtension {

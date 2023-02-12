@@ -11,13 +11,16 @@
 		}
 	],
 	"require": {
-		"php": ">=7.1",
-		"nette/di": "~2.4@dev",
-		"nettrine/orm": "^0.3"
+		"php": ">=7.2",
+		"nette/di": "^3.0",
+		"nettrine/orm": "^0.8.3"
 	},
 	"require-dev": {
-		"kdyby/console": "^2.7.1",
-		"kdyby/events": "^3.1.1"
+		"kdyby/console": "^2.9|^4.0",
+		"kdyby/events": "^5.0.1",
+		"phpstan/phpstan": "^1.9",
+		"phpstan/phpstan-nette": "^1.2.3",
+		"phpstan/phpstan-deprecation-rules": "^1.1.1"
 	},
 	"suggest": {
 		"kdyby/console": "Symfony Console integration for Kdyby components",

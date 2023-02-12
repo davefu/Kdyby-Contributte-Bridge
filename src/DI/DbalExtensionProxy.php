@@ -3,54 +3,24 @@
 namespace Davefu\KdybyContributteBridge\DI;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Portability\Connection as PortabilityConnection;
 use Nette\DI\CompilerExtension;
+use Nette\DI\Definitions\Statement;
 use Nette\PhpGenerator\ClassType;
+use Nette\Schema\Schema;
+use Nettrine\DBAL\ConnectionAccessor;
 use Nettrine\DBAL\ConnectionFactory;
 use Nettrine\DBAL\DI\DbalExtension;
+use Nettrine\DBAL\Events\ContainerAwareEventManager;
 use Nettrine\DBAL\Events\DebugEventManager;
+use Nettrine\DBAL\Tracy\BlueScreen\DbalBlueScreen;
 use Nettrine\DBAL\Tracy\QueryPanel\QueryPanel;
-use PDO;
 
 /**
  * @author David Fiedor <davefu@seznam.cz>
  */
 class DbalExtensionProxy extends CompilerExtensionProxy {
 
-	public const TAG_NETTRINE_SUBSCRIBER = DbalExtension::TAG_NETTRINE_SUBSCRIBER;
 	public const SERVICE_EVENT_MANAGER = 'eventManager';
-
-	/** @var mixed[] */
-	private $defaults = [
-		'debug' => false,
-		'configuration' => [
-			'sqlLogger' => null,
-			'resultCacheImpl' => null,
-			'filterSchemaAssetsExpression' => null,
-			'autoCommit' => true,
-		],
-		'connection' => [
-			'url' => null,
-			'pdo' => null,
-			'memory' => null,
-			'driver' => 'pdo_mysql',
-			'driverClass' => null,
-			'unix_socket' => null,
-			'host' => null,
-			'port' => null,
-			'dbname' => null,
-			'servicename' => null,
-			'user' => null,
-			'password' => null,
-			'charset' => 'UTF8',
-			'portability' => PortabilityConnection::PORTABILITY_ALL,
-			'fetchCase' => PDO::CASE_LOWER,
-			'persistent' => true,
-			'types' => [],
-			'typesMapping' => [],
-			'wrapperClass' => null,
-		],
-	];
 
 	/** @var DbalExtension */
 	private $originalExtension;
@@ -60,25 +30,13 @@ class DbalExtensionProxy extends CompilerExtensionProxy {
 	}
 
 	public function loadConfiguration(): void {
-		Helper\ExtensionValidator::of($this->compiler, static::class)
-			->validateKdybyEventsExtensionRegistered();
-		$builder = $this->getContainerBuilder();
-		$config = $this->validateConfig($this->defaults);
-
 		$this->loadDoctrineConfiguration();
 		$this->loadConnectionConfiguration();
-
-		if ($config['debug'] === true) {
-			$builder->addDefinition($this->prefix('queryPanel'))
-				->setFactory(QueryPanel::class)
-				->setAutowired(false);
-		}
 	}
 
 	public function loadConnectionConfiguration(): void {
 		$builder = $this->getContainerBuilder();
-		$globalConfig = $this->validateConfig($this->defaults);
-		$config = $this->validateConfig($this->defaults['connection'], $this->config['connection']);
+		$config = $this->config->connection;
 
 		$evmName = $this->prefix(self::SERVICE_EVENT_MANAGER);
 		if ($this->getExtension('Kdyby\Events\DI\EventsExtension') === null) {
@@ -91,23 +49,42 @@ class DbalExtensionProxy extends CompilerExtensionProxy {
 				->setAutowired(false);
 		}
 
-		if ($globalConfig['debug'] === true) {
+		if ($this->config->debug->panel) {
 			$builder->getDefinition($evmName)
 				->setAutowired(false);
 			$builder->addDefinition($this->prefix('eventManager.debug'))
-				->setFactory(DebugEventManager::class, [$this->prefix('@eventManager')]);
+				->setFactory(DebugEventManager::class, [$this->prefix('@' . self::SERVICE_EVENT_MANAGER)]);
 		}
 
 		$builder->addDefinition($this->prefix('connectionFactory'))
 			->setFactory(ConnectionFactory::class, [$config['types'], $config['typesMapping']]);
 
-		$builder->addDefinition($this->prefix('connection'))
-			->setFactory(Connection::class)
+		$connectionDef = $builder->addDefinition($this->prefix('connection'))
+			->setType(Connection::class)
 			->setFactory('@' . $this->prefix('connectionFactory') . '::createConnection', [
 				$config,
 				'@' . $this->prefix('configuration'),
-				$this->prefix('@' . self::SERVICE_EVENT_MANAGER)
+				$this->prefix('@' . self::SERVICE_EVENT_MANAGER),
 			]);
+
+		if ($this->config->debug->panel) {
+			$connectionDef
+				->addSetup('@Tracy\Bar::addPanel', [
+					new Statement(QueryPanel::class, [
+						$this->prefix('@profiler'),
+					]),
+				])
+				->addSetup('@Tracy\BlueScreen::addPanel', [
+					[DbalBlueScreen::class, 'renderException'],
+				]);
+		}
+
+		$builder->addAccessorDefinition($this->prefix('connectionAccessor'))
+			->setImplement(ConnectionAccessor::class);
+	}
+
+	public function getConfigSchema(): Schema {
+		return $this->originalExtension->getConfigSchema();
 	}
 
 	public function loadDoctrineConfiguration(): void {

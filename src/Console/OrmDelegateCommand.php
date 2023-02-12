@@ -23,7 +23,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @author David Fiedor <davefu@seznam.cz>
  */
 abstract class OrmDelegateCommand extends Command {
-	use \Kdyby\StrictObjects\Scream;
 
 	/** @var Command */
 	protected $command;

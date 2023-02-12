@@ -2,12 +2,12 @@
 
 namespace Davefu\KdybyContributteBridge\DI;
 
-use Nettrine\ORM\DI\OrmXmlExtension;
+use Nettrine\ORM\DI\OrmAttributesExtension;
 
 /**
  * @author David Fiedor <davefu@seznam.cz>
  */
-class OrmXmlExtensionProxy extends OrmXmlExtension {
+class OrmAttributesExtensionProxy extends OrmAttributesExtension {
 
 	public function validate(): void {
 		Helper\ExtensionValidator::of($this->compiler, static::class)

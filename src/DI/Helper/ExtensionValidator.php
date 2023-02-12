@@ -2,6 +2,7 @@
 
 namespace Davefu\KdybyContributteBridge\DI\Helper;
 
+use Davefu\KdybyContributteBridge\DI\OrmAnnotationsExtensionProxy;
 use Davefu\KdybyContributteBridge\DI\OrmExtensionProxy;
 use Kdyby\Events\DI\EventsExtension;
 use Nette\DI\Compiler;
@@ -19,7 +20,7 @@ class ExtensionValidator {
 	/** @var string */
 	private $callerName;
 
-	public function __construct(Compiler $compiler, string $callerName) {
+	final public function __construct(Compiler $compiler, string $callerName) {
 		$this->compiler = $compiler;
 		$this->callerName = $callerName;
 	}
@@ -45,6 +46,17 @@ class ExtensionValidator {
 	public function validateOrmExtensionRegistered(): self {
 		if ($this->compiler->getExtensions(OrmExtensionProxy::class) === []) {
 			Exception::throwMissingExtensionException(OrmExtensionProxy::class, $this->callerName);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @throws InvalidStateException
+	 */
+	public function validateOrmAnnotationsExtensionRegistered(): self {
+		if ($this->compiler->getExtensions(OrmAnnotationsExtensionProxy::class) === []) {
+			Exception::throwMissingExtensionException(OrmAnnotationsExtensionProxy::class, $this->callerName);
 		}
 
 		return $this;

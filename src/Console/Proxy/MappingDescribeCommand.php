@@ -11,6 +11,7 @@
 namespace Davefu\KdybyContributteBridge\Console\Proxy;
 
 use Davefu\KdybyContributteBridge\Console\OrmDelegateCommand;
+use Davefu\KdybyContributteBridge\Tool\CacheCleaner;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -18,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class MappingDescribeCommand extends OrmDelegateCommand {
 
 	/**
-	 * @var \Kdyby\Doctrine\Tools\CacheCleaner
+	 * @var CacheCleaner
 	 * @inject
 	 */
 	public $cacheCleaner;

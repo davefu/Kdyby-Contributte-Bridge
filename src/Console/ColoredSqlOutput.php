@@ -19,7 +19,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @author David Fiedor <davefu@seznam.cz>
  */
 class ColoredSqlOutput implements OutputInterface {
-	use \Kdyby\StrictObjects\Scream;
 
 	/** @var OutputInterface */
 	private $output;
@@ -52,22 +51,22 @@ class ColoredSqlOutput implements OutputInterface {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function write(string $messages, bool $newline = false, int $type = self::OUTPUT_NORMAL) {
-		return $this->output->write($this->formatSqls($messages), $newline, $type);
+	public function write($messages, $newline = false, $type = self::OUTPUT_NORMAL): void {
+		$this->output->write($this->formatSqls($messages), $newline, $type);
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function writeln(string $messages, int $type = self::OUTPUT_NORMAL) {
-		return $this->output->writeln($this->formatSqls($messages), $type);
+	public function writeln($messages, $type = self::OUTPUT_NORMAL): void {
+		$this->output->writeln($this->formatSqls($messages), $type);
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function setVerbosity(int $level) {
-		return $this->output->setVerbosity($level);
+	public function setVerbosity($level): void {
+		$this->output->setVerbosity($level);
 	}
 
 	/**
@@ -80,8 +79,8 @@ class ColoredSqlOutput implements OutputInterface {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function setDecorated(bool $decorated) {
-		return $this->output->setDecorated($decorated);
+	public function setDecorated($decorated): void {
+		$this->output->setDecorated($decorated);
 	}
 
 	/**
@@ -122,8 +121,8 @@ class ColoredSqlOutput implements OutputInterface {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function setFormatter(OutputFormatterInterface $formatter) {
-		return $this->output->setFormatter($formatter);
+	public function setFormatter(OutputFormatterInterface $formatter): void {
+		$this->output->setFormatter($formatter);
 	}
 
 	/**

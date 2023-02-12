@@ -41,7 +41,7 @@ final class CommandHelper {
 	public static function setApplicationConnection(ContainerHelper $containerHelper, $connName): void {
 		/** @var EntityManagerInterface $em */
 		$em = $containerHelper->getByType(EntityManagerInterface::class);
-		$connection = $em->getConnection($connName);
+		$connection = $em->getConnection();
 		/** @var HelperSet|null $helperSet */
 		$helperSet = $containerHelper->getHelperSet();
 		if ($helperSet !== null) {
