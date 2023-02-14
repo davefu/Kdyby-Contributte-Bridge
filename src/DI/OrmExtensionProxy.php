@@ -7,15 +7,13 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager as DoctrineEntityManager;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Definitions\Statement;
+use Nette\Schema\Schema;
 use Nettrine\ORM\DI\OrmExtension;
 use Nettrine\ORM\Exception\Logical\InvalidStateException;
 use Nettrine\ORM\ManagerRegistry;
-use stdClass;
 
 /**
  * @author David Fiedor <davefu@seznam.cz>
- *
- * @property-read stdClass $config
  */
 class OrmExtensionProxy extends CompilerExtensionProxy {
 
@@ -75,6 +73,10 @@ class OrmExtensionProxy extends CompilerExtensionProxy {
 				$builder->getDefinitionByType(Connection::class),
 				$this->prefix('@entityManagerDecorator'),
 			]);
+	}
+
+	public function getConfigSchema(): Schema {
+		return $this->originalExtension->getConfigSchema();
 	}
 
 	public function loadDoctrineConfiguration(): void {

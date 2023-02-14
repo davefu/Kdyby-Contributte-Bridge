@@ -92,7 +92,10 @@ class DbalExtensionProxy extends CompilerExtensionProxy {
 	}
 
 	public function beforeCompile(): void {
-		$this->originalExtension->beforeCompile();
+		if ($this->getKdybyEventsExtension() === null) {
+			//Load events listeners only if Kdyby/Events is not used.
+			$this->originalExtension->beforeCompile();
+		}
 	}
 
 	public function afterCompile(ClassType $class): void {
@@ -101,5 +104,9 @@ class DbalExtensionProxy extends CompilerExtensionProxy {
 
 	protected function getOriginalExtension(): CompilerExtension {
 		return $this->originalExtension;
+	}
+
+	private function getKdybyEventsExtension(): ?CompilerExtension {
+		return $this->getExtension('Kdyby\Events\DI\EventsExtension');
 	}
 }
