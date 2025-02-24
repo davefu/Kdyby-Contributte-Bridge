@@ -39,7 +39,7 @@ class DbalExtensionProxy extends CompilerExtensionProxy {
 		$config = $this->config->connection;
 
 		$evmName = $this->prefix(self::SERVICE_EVENT_MANAGER);
-		if ($this->getExtension('Kdyby\Events\DI\EventsExtension') === null) {
+		if ($this->getKdybyEventsExtension() === null) {
 			$builder->addDefinition($evmName)
 				->setFactory(ContainerAwareEventManager::class);
 		} else {
