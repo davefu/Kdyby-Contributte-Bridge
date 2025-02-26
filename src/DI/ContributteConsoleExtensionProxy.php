@@ -36,7 +36,7 @@ class ContributteConsoleExtensionProxy extends ConsoleExtension {
 		parent::loadConfiguration();
 
 		$builder = $this->getContainerBuilder();
-		$config = $this->config;
+		$config = $this->getConfig();
 
 		$cacheCleaner = $builder->addDefinition($this->prefix('cacheCleaner'))
 			->setFactory(CacheCleaner::class)

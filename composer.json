@@ -17,8 +17,7 @@
 		"nettrine/orm": "^0.8.3"
 	},
 	"require-dev": {
-		"contributte/console": ">=0.6 <0.10",
-		"kdyby/console": "^2.9|^4.0",
+		"contributte/console": ">=0.6 <1.0",
 		"kdyby/events": "^5.0.1",
 		"symfony/validator": "^2.5.3 || ^3.0 || ^4.0 || ^5.0 || ^6.0 || ^7.0",
 		"phpstan/phpstan": "^1.9",
@@ -27,7 +26,6 @@
 	},
 	"suggest": {
 		"contributte/console": "Best Symfony Console for Nette Framework",
-		"kdyby/console": "Symfony Console integration for Kdyby components",
 		"kdyby/events": "Events for Nette Framework"
 	},
 	"autoload": {
